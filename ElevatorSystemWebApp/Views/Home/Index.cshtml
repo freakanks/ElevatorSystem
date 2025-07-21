@@ -1,0 +1,46 @@
+﻿@using ElevatorSystem.Entities;
+@model IEnumerable<IElevator>
+@{
+    ViewData["Title"] = "Demo Elevator Operations";
+}
+
+<div class="container">
+    <h3 class="mb-4">Elevator Status</h3>
+    <table class="table table-bordered table-striped text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Car Number</th>
+                <th>Current Floor</th>
+                <th>Direction</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var elevator in Model)
+            {
+                <tr>
+                    <td>@elevator.ID</td>
+                    <td>@elevator.CurrentFloor</td>
+                    <td>
+                        @if (@elevator.MovementDirection == @ElevatorSystem.Entities.Direction.UP)
+                        {
+                            <i class="bi bi-arrow-up-circle-fill text-success"></i>
+                        }
+                        else if (@elevator.MovementDirection == @ElevatorSystem.Entities.Direction.DOWN)
+                        {
+                            <i class="bi bi-arrow-down-circle-fill text-danger"></i>
+                        }
+                        else if (@elevator.MovementDirection == @ElevatorSystem.Entities.Direction.HALT)
+                        {
+                            <i class="bi bi-dash-circle-fill text-secondary"></i>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    setInterval(function () {
+        location.reload();
+    }, 5000);
+</script>
