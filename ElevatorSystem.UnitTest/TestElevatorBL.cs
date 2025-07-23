@@ -10,7 +10,7 @@ namespace ElevatorSystem.UnitTest
         private IElevatorDL GetElevatorDL() => new ElevatorDL(new NullLogger<ElevatorDL>());
         private IElevatorBL GetElevatorBL() => new ElevatorBL(new NullLogger<ElevatorBL>(), GetElevatorDL());
         [Fact]
-        public void EnqueueCall_AssignsToIdleElevator()
+        public void WhenRequestElevator_IdleElevatorAssigned()
         {
             var businessLayer = GetElevatorBL();
 
@@ -22,7 +22,7 @@ namespace ElevatorSystem.UnitTest
         }
 
         [Fact]
-        public void Elevator_ReachesDestination()
+        public void WhenAssignedFloor_ElevatorShouldReachDestination()
         {
             var businessLayer = GetElevatorBL();
 
@@ -41,7 +41,7 @@ namespace ElevatorSystem.UnitTest
         }
 
         [Fact]
-        public void Elevator_RespectsTravelAndHaltDelays()
+        public void WhenFloorArrives_ElevatorShouldHalt()
         {
             var businessLayer = GetElevatorBL();
             var elevator = businessLayer.GetElevatorsCollection().First();
@@ -59,7 +59,7 @@ namespace ElevatorSystem.UnitTest
         }
 
         [Fact]
-        public void Elevator_MovesInCorrectDirection()
+        public void WhenAddedDestination_ElevatorShouldMoveInCorrectDirection()
         {
             var businessLayer = GetElevatorBL();
             var elevator = businessLayer.GetElevatorsCollection().First();
@@ -74,7 +74,7 @@ namespace ElevatorSystem.UnitTest
         }
 
         [Fact]
-        public void Elevator_StopsAtCorrectFloorAndHalts()
+        public void WhenAddedDestination_ElevatorShouldStopAtCorrectFloorAndHalts()
         {
             var businessLayer = GetElevatorBL();
             var elevator = businessLayer.GetElevatorsCollection().First();
@@ -89,7 +89,7 @@ namespace ElevatorSystem.UnitTest
         }
 
         [Fact]
-        public void Elevator_IgnoresMoveBeforeAvailableTime()
+        public void WhenElevatorPcikingPassengers_ShoudlIgnoreMoveBeforeAvailableTime()
         {
             var businessLayer = GetElevatorBL();
             var elevator = businessLayer.GetElevatorsCollection().First();
@@ -102,7 +102,7 @@ namespace ElevatorSystem.UnitTest
         }
 
         [Fact]
-        public void BusinessLayer_AssignsToElevatorGoingSameDirection()
+        public void WhenElevatorRequested_ShouldAssignToElevatorGoingSameDirection()
         {
             var businessLayer = GetElevatorBL();
             var elevator = businessLayer.GetElevatorsCollection().First();
