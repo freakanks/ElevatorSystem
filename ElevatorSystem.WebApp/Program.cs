@@ -1,15 +1,26 @@
-using EelevatorSystem.Data;
-using ElevatorSystem.Business;
-using ElevatorSystem.Business.Implementations;
-using ElevatorSystem.Entities;
+using ElevatorSystem.DataLayer;
+using ElevatorSystem.BusinessLayer;
+using Serilog;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddSingleton<IElevatorRepo, ElevatorRepo>();
-builder.Services.AddTransient<IElevatorOperation, ElevatorOperation>();
-builder.Services.AddHostedService<RandomOperator>();
+builder.Services.AddSingleton<IElevatorDL, ElevatorDL>();
+builder.Services.AddTransient<IElevatorBL, ElevatorBL>();   
+builder.Services.AddHostedService<SimulationService>();
+
+builder.Services.AddSignalR();
+
+Log.Logger = new LoggerConfiguration()
+       .ReadFrom.Configuration(builder.Configuration)
+       .Enrich.FromLogContext()
+       .WriteTo.Console()
+       .WriteTo.File("Logs/ElevatorSystem.txt", rollingInterval: RollingInterval.Day)
+       .CreateLogger();
+
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
@@ -31,5 +42,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<ElevatorHub>("/elevatorHub");
 
 app.Run();

@@ -1,0 +1,38 @@
+﻿@using ElevatorSystem.Entities;
+@{
+    ViewData["Title"] = "Elevator Control Dashboard";
+}
+
+<div class="container">
+    <h3 class="mb-4">Elevator Status</h3>
+    <table id="status" class="table table-bordered table-striped text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>Elevator</th>
+                <th>Current Floor</th>
+                <th>Direction</th>
+                <th>Destinations</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+<script>
+    const connection = new signalR.HubConnectionBuilder().withUrl('/elevatorHub').build();
+
+    connection.on('StateUpdated', (elevators) => {
+        const tbody = document.querySelector('#status tbody');
+        tbody.innerHTML = '';
+        elevators.forEach(e => {
+            const row = document.createElement('tr');
+            let direction = e.direction == 'UP' ? '<i class="bi bi-arrow-up-circle-fill text-success"></i>' :
+                                e.direction == 'DOWN' ? ' <i class="bi bi-arrow-down-circle-fill text-danger"></i>' :
+                                        '<i class="bi bi-dash-circle-fill text-secondary"></i>';
+            row.innerHTML = `<td>${e.id}</td><td>${e.currentFloor}</td><td>${direction}</td><td>${e.destinations.join(', ')}</td>`;
+            tbody.appendChild(row);
+        });
+    });
+
+    connection.start()
+</script>
